@@ -1,0 +1,15 @@
+#mycursor {
+  /*cursor: none;*/
+  width: 100%;
+  height: 100%;
+  background: url("../images/boxing_glove_copy.png") no-repeat left top;
+  position: absolute;
+  display: none;
+  top: 0;
+  left: 0;
+  z-index: 10000;
+}
+
+#gameCanvas {
+  cursor: none;
+}
