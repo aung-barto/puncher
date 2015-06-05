@@ -30,65 +30,38 @@
       var stage; 
       var canvas;
       var mole;
+      var holder;
+      var speed = 11000;
       //array of functions to push moles from random locations
       var path = [pathOne, pathTwo, pathThree, pathFour];
+      var random = function(){return Math.floor(Math.random()*120)};
       function init(){
     
         createjs.MotionGuidePlugin.install(createjs.Tween);
-
         canvas = document.getElementById("gameCanvas");
         stage = new createjs.Stage(canvas);
+        holder = stage.addChild(new createjs.Container());
         stage.autoClear = true;
         window.addEventListener('resize', updateCanvasSize);
         updateCanvasSize();
 
         target();
-
         //calling balls to shoot
         setInterval(shootMoles, 4000);
-
-        createjs.Ticker.setFPS(600);
+        createjs.Ticker.setFPS(60);
         createjs.Ticker.addEventListener("tick", stage);
       }
-
-      function punchMole(mole){
-        mole.addEventListener("mouseover", function(event){
-          //if glove coordinates are higher than mole coordinates
-          if (stage.mouseX > mole.x && stage.mouseY > mole.y)
-            {createjs.Tween.get(mole)
-              .to({ x: mole.x-random()-400, y: mole.y-random()-400}, 2000, createjs.EasePowIn(5))
-            }
-            //if glove coordinates are less than mole coordinates
-            else if (stage.mouseX < mole.x && stage.mouseY < mole.y)
-            {createjs.Tween.get(mole)
-              .to({ x: mole.x+random()+400, y: mole.y+random()+400}, 2000, createjs.EasePowIn(5))
-            }
-            //if glove x coordinate is more and y coordinate is less than mole coordinates
-            else if (stage.mouseX > mole.x && stage.mouseY < mole.y)
-            {createjs.Tween.get(mole)
-              .to({ x: mole.x-random()-400, y: mole.y+random()+400}, 2000, createjs.EasePowIn(5))
-            }
-            else
-            {createjs.Tween.get(mole)
-              .to({ x: mole.x-random()+400, y: mole.y-random()-400}, 2000, createjs.EasePowIn(5))
-            }
-        });
-      };
-
       function updateCanvasSize(){
         var w = window.innerWidth;
         var h = window.innerHeight;
-
         canvas.width = w;
         canvas.height = h;
       }
-
       function shootMoles(){
         for ( i = 0; i < path.length; i++){
-         setInterval(path[i](), 2000);
+         path[i]();
         }
       }
-
       function target(){
         ring = new createjs.Shape();
         ring.graphics.ss(7, 'round', 'round').s(('#ff0000')).dc(0,0,canvas.height*0.225);
@@ -96,41 +69,89 @@
         ring.y = canvas.height * 0.5;
         stage.addChild(ring);
       }
-
       function makeMole(){
         mole = new createjs.Shape();
         mole.graphics.ss(1, 'round', 'round').f("#" + rc() +rc() +rc()).dc(0,0,30).ef().es();
-        punchMole(mole);
-        stage.addChild(mole);
+        box = new createjs.Shape();
+        box.graphics.f("blue").dr(60,60,60,60);
+        box.x = mole.x;
+        box.y = mole.y;
+        // mole.addChild(box);
+        // punchMole(mole);
+        holder.addChild(mole);
+        createjs.Ticker.on("tick", tick);
+      }
+
+      function tick(event){
+        var l = holder.getNumChildren();
+        for ( var m = 0; m < l; m++){
+          var child = holder.getChildAt(m);
+          var pt = (child.globalToLocal(stage.mouseX, stage.mouseY))
+          if (stage.mouseInBounds && child.hitTest(pt.x, pt.y))
+            // {createjs.Tween.get(child)
+            //   .to({ x: child.x-random(), y: child.y-random()}, 2000, createjs.Ease.getPowIn(2.2));
+              // .to({guide: {path: [200, 200, 500, 500, 800, 800] }}, 2000);
+              // graphics.moveTo(rx(), ry());
+            // }
+            {holder.removeChildAt(m)}
+        }
+        stage.update(event);
       }
 
       function pathOne(){
         makeMole();
         createjs.Tween.get(mole)
         //from left to right
-        .to({guide: {path: [-30,ry(), rx(),ry(), canvas.width+30,ry()]}}, 3000);
+        .to({guide: {path: [-30,ry(), rx(),ry(), canvas.width+30,ry()]}}, speed);
       }
-
       function pathTwo(){
         makeMole();
         createjs.Tween.get(mole)
         //from right to left
-        .to({guide: {path: [canvas.width+30,ry(), canvas.width*0.5,canvas.height*0.5, -30,ry()]}}, 3000);
+        .to({guide: {path: [canvas.width+30,ry(), canvas.width*0.5,canvas.height*0.5, -30,ry()]}}, speed);
       }
-
       function pathThree(){
         makeMole();
         createjs.Tween.get(mole)
         //from top to bottom
-        .to({guide: {path: [rx(),-30, canvas.width*0.5,canvas.height*0.5, rx(),canvas.height+30]}}, 3000);
+        .to({guide: {path: [rx(),-30, canvas.width*0.5,canvas.height*0.5, rx(),canvas.height+30]}}, speed);
       }
-
       function pathFour(){
         makeMole();
         createjs.Tween.get(mole)
         //from bottom to top
-        .to({guide: {path: [rx(),canvas.height, canvas.width*0.5,canvas.height*0.5, rx(),-30]}}, 3000);
+        .to({guide: {path: [rx(),canvas.height, canvas.width*0.5,canvas.height*0.5, rx(),-30]}}, speed);
       }
+
+      // function punchMole(event){
+      //       // mole.setBounds(child.x, child.y, 60, 60);
+      //   mole.addEventListener("mouseover", function(event){
+      //     var l = holder.getNumChildren();
+      //     for (var i = 0; i < l; i++){
+      //       var child = holder.getChildAt(i);
+      //       var pt = (child.globalToLocal(stage.mouseX, stage.mouseY))
+      //       if (stage.mouseInBounds && child.hitTest(pt.x, pt.y)){
+      //         createjs.Tween.get(child)
+      //         .to({ x: child.x-random()-400, y: child.y-random()-400}, 2000, createjs.Ease.getPowIn(5))
+      //       }
+      //       //if glove coordinates are less than mole coordinates
+      //       else if (pt.x < child.x && pt.y < child.y){
+      //         createjs.Tween.get(child)
+      //         .to({ x: child.x+random()+400, y: child.y+random()+400}, 2000, createjs.Ease.getPowIn(5))
+      //       }
+      //       //if glove x coordinate is more and y coordinate is less than mole coordinates
+      //       else if (pt.x > child.x && pt.y < child.y){
+      //         createjs.Tween.get(child)
+      //         .to({ x: child.x-random()-400, y: child.y+random()+400}, 2000, createjs.Ease.getPowIn(5))
+      //       }
+      //       //if glove coordinates are higher than mole coordinates
+      //       else if (pt.x < child.x && pt.y > child.y){
+      //         createjs.Tween.get(child)
+      //         .to({ x: child.x-random()+400, y: child.y-random()-400}, 2000, createjs.Ease.getPowIn(5))
+      //       }
+      //     }
+      //   });
+      // };
 
       function rx() {
         return Math.random() * 2580 + 10;
