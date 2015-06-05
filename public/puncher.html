@@ -8,6 +8,8 @@
     <script src="https://code.jquery.com/jquery-2.1.1.js"></script>
   <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="./css/styles.css" />
+  <!-- google font -->
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
 
     <script>
       //replace mouse cursor with boxing glove
@@ -89,7 +91,7 @@
 
       function target(){
         ring = new createjs.Shape();
-        ring.graphics.ss(5, 'round', 'round').s(('#ececec')).dc(0,0,canvas.height*0.225);
+        ring.graphics.ss(7, 'round', 'round').s(('#ff0000')).dc(0,0,canvas.height*0.225);
         ring.x = canvas.width * 0.5;
         ring.y = canvas.height * 0.5;
         stage.addChild(ring);
@@ -143,6 +145,7 @@
   </head>
   <!-- load init function -->
   <body onload="init();">
+  <h1>Puncher!!!</h1>
     <!-- defines canvas size -->
     <canvas id="gameCanvas"></canvas>
     <div id="mycursor"></div>
