@@ -31,6 +31,7 @@
 
         //create a container to store all moles
         holder = stage.addChild(new createjs.Container());
+
         //define spritesheet >>> "mole"
         normMole = new createjs.SpriteSheet({
           framerate: 30,
@@ -42,7 +43,6 @@
             "regY": 30,
             "width": 100
           },
-          //loops, 1.5x speed
           "animations": {
             "spin": {
               "frames": 3,
@@ -67,7 +67,7 @@
               "speed": 1
             }
           }
-        })
+        });
 
         stage.autoClear = true;
 
@@ -92,7 +92,7 @@
          path[i]();
         }
       }
-      //target ring - static
+      //target ring - doesn't move
       function target(){
         ring = new createjs.Shape();
         ring.graphics.ss(7, 'round', 'round').s(('#ff0000')).dc(0,0,canvas.height*0.225);
@@ -100,6 +100,7 @@
         ring.y = canvas.height * 0.5;
         stage.addChild(ring);
       }
+      //create individual mole
       function makeMole(){
         // mole = new createjs.Shape();
         // mole.graphics.ss(1, 'round', 'round').f("#" + rc() +rc() +rc()).dc(0,0,30).ef().es();
@@ -110,7 +111,7 @@
         createjs.Ticker.on("tick", tick);
       }
 
-      //generate dead moles to replace rolled overed moles
+      //generate dead moles to replace rolled over moles
       function deadMole(){
         // dMole = new createjs.Shape();
         // dMole.graphics.beginFill("#000000").drawCircle(0,0,30);
