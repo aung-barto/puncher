@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="http://code.createjs.com/easeljs-0.5.0.min.js"></script>
+    <script>
+        var jetSprite,jetSprite2;
+        var boundingCircle1, boundingCircle2;
+        var actualBounds;
+ 
+        var stage;
+ 
+        document.addEventListener('DOMContentLoaded', demo,false);
+ 
+ 
+        function getBoundingCircleRadius(sprite){
+            return Math.sqrt(((sprite.image.width/2 * sprite.image.width/2)
+                    + (sprite.image.height/2 * sprite.image.height/2)));
+ 
+        }
+ 
+        function createBoundingCircle(sprite,useMaxExtents){
+            var g = new createjs.Graphics();
+            g.setStrokeStyle(2);
+            g.beginStroke(createjs.Graphics.getRGB(0,0,255));
+            var radius = getBoundingCircleRadius(sprite);
+            g.drawCircle(sprite.x,sprite.y,radius);
+            return new createjs.Shape(g);
+        }
+ 
+        function circlesIntersect(c1X,c1Y,c1Radius, c2X, c2Y, c2Radius){
+            var distanceX = c2X - c1X;
+            var distanceY = c2Y - c1Y;
+ 
+            var magnitude = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+            return magnitude < c1Radius + c2Radius;
+            // Note, sqrt is a slow operation, square both sides for better performance
+            // var magnitudeSquared = distanceX * distanceX + distanceY * distanceY;
+            // return magnitudeSquared < (c1Radius + c2Radius) * (c1Radius + c2Radius);
+        }
+ 
+        function demo(){
+            stage = new createjs.Stage("theCanvas");
+ 
+            jetSprite = new createjs.Bitmap("../images/boxing_glove.png");
+            jetSprite.regX = 30; // Half image width
+            jetSprite.regY = 40; // Half image height
+            jetSprite.y = 200;
+            jetSprite.x = 100;
+ 
+            jetSprite.image.onload = function(){
+                boundingCircle1 = createBoundingCircle(jetSprite);
+                stage.addChild(boundingCircle1);
+            }
+ 
+            stage.addChild(jetSprite);
+ 
+ 
+ 
+            jetSprite2 = new createjs.Bitmap("../images/boxing_glove.png");
+            jetSprite2.regX = 30; // Half image width
+            jetSprite2.regY = 40; // Half image height
+            jetSprite2.y = 200;
+            jetSprite2.x = 300;
+ 
+            jetSprite2.image.onload = function(){
+                boundingCircle2 = createBoundingCircle(jetSprite2);
+                stage.addChild(boundingCircle2);
+            }
+ 
+ 
+            stage.addChild(jetSprite2);
+ 
+            //And go...
+            stage.update();
+ 
+            // onFrame will be called each "tick". Default is 50ms, or 20FPS
+            createjs.Ticker.addListener(onFrame);
+        }
+ 
+        function onFrame(elapsedTime) {
+            jetSprite.x++;
+            jetSprite.rotation = jetSprite.rotation+1;
+            stage.removeChild(boundingCircle1);
+            boundingCircle1 = createBoundingCircle(jetSprite);
+ 
+            stage.addChild(boundingCircle1);
+            stage.addChild(boundingCircle2);
+ 
+            if(circlesIntersect(jetSprite.x, jetSprite.y, getBoundingCircleRadius(jetSprite),
+                    jetSprite2.x, jetSprite2.y, getBoundingCircleRadius(jetSprite2)))
+            {
+                jetSprite.x = 100;
+            }
+ 
+            stage.update();
+        }
+    </script>
+ 
+</head>
+<body>
+<canvas width=400height=400id="theCanvas"style="background-color:black"/>
+</body>
+</html>
