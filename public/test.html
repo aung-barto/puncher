@@ -1,0 +1,85 @@
+<html>
+  <head>
+  <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="./css/styles.css" />
+  <!-- Create JS -->
+    <script src="https://code.createjs.com/createjs-2015.05.21.min.js"></script>
+  <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-2.1.1.js"></script>
+  <!-- google font -->
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+
+    <script>
+    var stage, image;
+
+    function init(){
+      // createjs.MotionGuidePlugin.install(createjs.Tween);
+      canvas = document.getElementById("gameCanvas");
+      stage = new createjs.Stage(canvas);
+      var w = window.innerWidth;
+      var h = window.innerHeight;
+      canvas.width = w;
+      canvas.height = h-49;
+
+      glove = new createjs.Bitmap("./images/boxing_glove.png");
+      
+
+      stage.addChild(glove);
+      createjs.Ticker.addEventListener("tick", moveGlove);
+    }
+
+    function moveGlove(event){
+      glove.x = stage.mouseX;
+      glove.y = stage.mouseY;
+      stage.update();
+    }
+      // manifest = [
+      //   {id: "norm", src: "norm.png"},
+      //   {id: "knockout", src: "knockout.png"}
+      // ];
+
+    //   loader = new createjs.LoadQueue(false); 
+    //   loader.addEventListener("complete", handleImageLoad);
+    //   loader.loadManifest(manifest, true, "./images/");
+    // }
+
+    // function handleImageLoad(e){
+    
+      //define spritesheet >>> "mole"
+      // var spriteSheet = new createjs.SpriteSheet({
+      //   framerate: 10,
+      //   "images": ["./images/norm.png"],
+      //   "frames": {
+      //     "regX": 50, 
+      //     "height": 90, 
+      //     "count": 3,
+      //     "regY": 45,
+      //     "width": 300
+      //   },
+      //   "animations": {
+      //     "spin": [1,2,3, "spin"]
+      //   }
+      // });
+      
+      // var normMole = new createjs.Sprite(spriteSheet, "spin");
+      // normMole.x = 200;
+      // normMole.y = 200;
+      // normMole.gotoAndStop("spin");
+
+      // stage.addChild(normMole);
+      // createjs.Ticker.timingMode = createjs.Ticker.RAF;
+      // createjs.Ticker.addEventListener("tick", stage);
+
+
+
+    </script>
+  </head>
+  <!-- load init function -->
+  <body onload="init();">
+  <h1>Puncher!!!</h1>
+    <!-- defines canvas size -->
+    <canvas id="gameCanvas"></canvas>
+    <!-- grabbing mouse cursor -->
+    <div id="mycursor"></div>
+  </body>
+</html>
