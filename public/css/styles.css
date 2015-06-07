@@ -1,24 +1,84 @@
 body {
-  background-color: #ffffff;
+  /*background-color: #ffffff;*/
+  margin: 0px;
 }
 
-h1,h2{
+audio{
+  display: none;
+}
+
+h1,h2,h4{
   font-family: 'Montserrat', sans-serif; 
   font-weight: 700;
   font-size: 40px;
-  color: #ff0000;
+  color: #ffffff;
+}
+
+
+div.nav-bar{
+  background-color: #ff0000;
+  margin: 0px;
+  height: 100px;
 }
 
 h2{
   font-size: 200px;
   position: absolute;
   text-align: center;
-  color: #000000; 
+}
+
+h4{
+  position: relative;
+  right: 0px;
 }
 
 a{
   text-decoration: none;
 }
+
+.start{
+  position: absolute;
+  text-align: center;
+  margin-left: 255px;
+  margin-right: auto;
+}
+
+#start-link{
+  color: #ff0000;
+}
+
+.title{
+  top: 20px;
+  margin: 0 0 0 50px;
+  float: left;
+}
+
+.title-link,#exit-link{
+  color: #ffffff;
+}
+.end{
+  float: right;
+  text-align: right;
+  margin-right: 50px;
+  font-color: #ffffff;
+}
+
+.nav{
+  display: inline-block;
+  position: relative;
+  bottom: 30px;
+}
+
+h2.over {
+  font-family: 'Montserrat', sans-serif; 
+  font-weight: 700;
+  position: absolute;
+  text-align: center;
+  font-size: 150px;
+  margin-left: 155px;
+  color: #ff0000;
+}
+
 #mycursor {
   width: 100%;
   height: 100%;
@@ -30,5 +90,7 @@ a{
 }
 
 #gameCanvas {
+  position: relative;
   cursor: none;
+  bottom: 55px;
 }
