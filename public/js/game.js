@@ -1,13 +1,17 @@
 //setting up stage for game
 var stage, canvas, holder;
-var mole, dMole, glove, moleBound, ring, ringRadius, moleRaw, bounds; 
+var mole, dMole, moleBound, ring, ringRadius, moleRaw, bounds; 
 var speed = 11000;
 var dSpeed = 7000;
 var kill = [];
 var bounce = createjs.Ease.getPowOut(4);
-var punchSound = "punch";
+var punchSound = "punching";
 var count = 1;
 var clock;
+
+var glove = new createjs.Bitmap("./images/boxing_glove.png");
+var iceCream = new createjs.Bitmap("./images/ice_cream_s.png");
+  
 //array of functions to push moles from random locations
 var path = [pathOne, pathTwo, pathThree, pathFour];
 
@@ -28,31 +32,25 @@ function init(){
   
   target();
 
-  // replace cursor with glove
-  glove = new createjs.Bitmap("./images/boxing_glove.png");
+
   loadSound();
 
   stage.addChild(glove);
-  // countDown()
+ 
   setInterval(shootMoles, 3000);
   timer();
-  // clearGame();
 
   createjs.Ticker.setFPS(40);
   createjs.Ticker.addEventListener("tick", stage);
   createjs.Ticker.addEventListener("tick", moveGlove);
-  createjs.Ticker.addEventListener("tick", clearGame);
+  createjs.Ticker.addEventListener("tick", gameOver);
 }
 
-// function gameTime(){
-//   ;
-// }
-
-function loadSound () {
+function loadSound() {
   createjs.Sound.registerSound("./sounds/sharp_punch_sound.mp3", punchSound);
 }
 
-function playSound () {
+function punch() {
   createjs.Sound.play(punchSound);
 }
 
@@ -64,7 +62,7 @@ function timer(){
   }, 1000);
 }
 
-function clearGame(){
+function gameOver(){
   if ($(".timer").html() == "0"){
     clearInterval(shootMoles);
     window.location.assign("http://localhost:3000/end");
@@ -92,14 +90,16 @@ function shootMoles(){
 
 //target ring - doesn't move
 function target(){
-  ring = new createjs.Shape();
-  ring.graphics.ss(7, 'round', 'round').s(('#ff0000')).dc(0,0,canvas.height*0.225);
-  ring.x = canvas.width * 0.5;
-  ring.y = canvas.height * 0.5;
-  ringRadius = canvas.height*0.225;
-  ringBound = ring.getBounds();
-  console.log(ringBound);
-  stage.addChild(ring);
+  // ring = new createjs.Shape();
+  // ring.graphics.ss(7, 'round', 'round').s(('#ff0000')).dc(0,0,canvas.height*0.225);
+  iceCream.x = canvas.width * 0.5 - 50;
+  iceCream.y = canvas.height * 0.5 - 80;
+  iceCream.scaleX = 1.25;
+  iceCream.scaleY = 1.25;
+  // ringRadius = canvas.height*0.225;
+  // ringBound = ring.getBounds();
+  // console.log(ringBound);
+  stage.addChild(iceCream);
 }
 
 function moleIntersectTarget(){
@@ -157,15 +157,13 @@ function makeMole(){
     var moleSprite = new createjs.SpriteSheet({
         framerate: 30,
         "images": ["./images/norm.png"],
-        //regX, regY - mid position of a frame
-        //height, width of a frame
-        //total number of frames
+        //{regX, regY - mid position of a frame| height, width of a frame| total number of frames}
         "frames": {
-            "regX": 50, 
-            "height": 90, 
+            "regX": 35, 
+            "height": 70, 
             "count": 3, 
-            "regY": 45, 
-            "width": 100
+            "regY": 35, 
+            "width": 70
         },
         //[frame index, action, loop speed]
         "animations": {
@@ -196,11 +194,11 @@ function deadMole(){
         framerate: 30,
         "images": ["./images/knockout.png"],
         "frames": {
-            "regX": 50, 
-            "height": 90, 
+            "regX": 35, 
+            "height": 69, 
             "count": 6, 
-            "regY": 45, 
-            "width": 100
+            "regY": 34.5, 
+            "width": 70
         },
 
         "animations": {
@@ -235,9 +233,7 @@ function hitMole(event){
       //get last mouse coordinates before killing each mole
       kill[0] = stage.mouseX;
       kill[1] = stage.mouseY;
-
-      playSound();
-
+      punch();
       count++;
       counter();
     
