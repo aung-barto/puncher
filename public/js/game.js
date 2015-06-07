@@ -1,10 +1,12 @@
 //setting up stage for game
 var stage, canvas, holder;
-var mole, dMole, glove, moleBound, ring, radius, moleRaw; 
+var mole, dMole, glove, moleBound, ring, ringRadius, moleRaw, bounds; 
 var speed = 11000;
 var dSpeed = 7000;
 var kill = [];
 var bounce = createjs.Ease.getPowOut(4);
+var bellSound = "bell";
+var count = "";
 //array of functions to push moles from random locations
 var path = [pathOne, pathTwo, pathThree, pathFour];
 
@@ -25,21 +27,30 @@ function init(){
   updateCanvasSize();
   
   target();
-  //replace cursor with glove
+  // replace cursor with glove
   glove = new createjs.Bitmap("./images/boxing_glove.png");
+  playSound();
+  // loadSound();
+  
   stage.addChild(glove);
 
   setInterval(shootMoles, 3000);
   createjs.Ticker.setFPS(40);
   createjs.Ticker.addEventListener("tick", stage);
   createjs.Ticker.addEventListener("tick", moveGlove);
-  createjs.Ticker.addEventListener("tick", removeOutBoundMole);
-  // createjs.Ticker.addEventListener("tick", dangerZone);
 }
 
+function loadSound () {
+  createjs.Sound.registerSound("./sounds/boxing_bell_ring_x1.mp3", bellSound);
+  
+}
+
+function playSound () {
+  createjs.Sound.play(bellSound);
+}
 function moveGlove(event){
-  glove.x = stage.mouseX;
-  glove.y = stage.mouseY;
+  glove.x = stage.mouseX - 30;
+  glove.y = stage.mouseY - 33;
   stage.update();
 }
 
@@ -55,39 +66,69 @@ function shootMoles(){
    path[i]();
   }
 }
+
 //target ring - doesn't move
 function target(){
   ring = new createjs.Shape();
   ring.graphics.ss(7, 'round', 'round').s(('#ff0000')).dc(0,0,canvas.height*0.225);
   ring.x = canvas.width * 0.5;
   ring.y = canvas.height * 0.5;
-  stage.addChild(ring);
+  ringRadius = canvas.height*0.225;
+  ringBound = ring.getBounds();
+  console.log(ringBound);
+  holder.addChild(ring);
 }
 
-// function getMoleRadius(mole){
-//   radius = Math.sqrt(((mole.image.width/2 * mole.image.width/2) + (mole.image.height/2 * mole.image.height/2)));
-//   console.log(radius);
-// }
+function moleIntersectTarget(){
+  var l = holder.getNumChildren();
+  for (var m = 0; m < l; m++){
+    var child = holder.getChildAt(m);
+  // console.log(ringRadius);
+    if(((child.x > canvas.width*0.5 - ringRadius && child.x < canvas.width*0.5)&&(child.y > canvas.height*0.5 - ringRadius && child.y < canvas.height*0.5))&&
+      ((child.x > canvas.width*0.5 && child.x < canvas.width*0.5 + ringRadius)&&(child.y > canvas.height*0.5 - ringRadius && child.y < canvas.height*0.5))&&
+      ((child.x > canvas.width*0.5 && child.x < canvas.width*0.5 + ringRadius)&&(child.y > canvas.height*0.5 && child.y < canvas.height*0.5 + ringRadius))&&
+      ((child.x > canvas.width*0.5 - ringRadius && child.x < canvas.width*0.5)&&(child.y > canvas.height*0.5 && child.y < canvas.height*0.5 + ringRadius))){
+      console.log("collision")
+    }
+    // if(child.x == canvas.width*0.5 || child.y == canvas.height*0.5){
+    //   console.log("collision");
+    // }
+    // var distanceX = child.x - ring.x;
+    // var distanceY = child.y - ring.y;
 
-function createMoleBound(mole){
-  var g = new createjs.Graphics();
-  g.setStrokeStyle(1);
-  g.beginStroke("#000000");
-  // var radius = getMoleRadius(mole);
-  g.drawCircle(mole.x, mole.y, 50);
-  console.log("circle");
-  return new createjs.Shape(g);
-  stage.addChild(g);
+    // var magnitudeSquared = distanceX * distanceX + distanceY + distanceY;
+    // console.log("x " + distanceX);
+    // console.log("y " + distanceY);
+    // console.log("ring radius " + ringRadius);
+    // console.log("magnitude " + magnitudeSquared);
+    // console.log((ringRadius + 45) * (ringRadius + 45));
+    // if( magnitudeSquared < ((ringRadius + 45) * (ringRadius + 45))){
+
+    // console.log("TOUCH!!!");
+    // }
+  }
 }
 
-function moleIntersectTarget(ringX, ringY, ringRadius, moleBoundX, moleBoundY, moleBoundRadius){
-  var distanceX = moleBoundX - ringX;
-  var distanceY = moleBoundY - ringY;
-
-  var magnitudeSquared = distanceX * distanceX + distanceY + distanceY;
-  return magnitudeSquared < (ringRadius + moleBoundRadius) * (ringRadius + moleBoundRadius);
+function checkOverLap(){
+  // var l = holder.getNumChildren();
+  // for ( var m = 0; m < l; m++){
+  //   var child = holder.getChildAt(m);
+  //   var pt = (child.globalToLocal(stage.mouseX, stage.mouseY));
+  //   if(ring.x - child.x < canvas.height*0.225 + 45){
+  //     alert("game over");
+  //     console.log("game over");
+     
+  //   }
+  // }
+  var l = holder.getNumChildren();
+  for (var m = 0; m < l; m++){
+    var child = holder.getChildAt(m);
+    if(moleIntersectTarget(canvas.width*0.5, canvas.height*0.5, canvas.height*0.225, child.x, child.y, 45)){
+      console.log("game over");
+    }
+    
+  }
 }
-
 //create individual mole
 function makeMole(){
     var moleSprite = new createjs.SpriteSheet({
@@ -108,22 +149,22 @@ function makeMole(){
           "spin": [0, 2, "spin", 0.05],
         }
     });
+    // mole.crossOrigin = "Anonymous";
     moleRaw = new createjs.Sprite(moleSprite, "spin");
-    // mole.onload = function(){
-      // var g = new createjs.Graphics();
-      // g.setStrokeStyle(1);
-      // g.beginStroke("#000000");
-      // g.drawCircle(mole.x, mole.y, 50);
-      moleBound = new createjs.Shape();
-      moleBound.graphics.ss(1, 'round', 'round').s(("#000000")).dc(0,0,50);
-      moleBound.alpha = 0.5;
-      stage.addChild(moleBound);
+    //set boundary around mole for collision detection
+    moleBound = new createjs.Shape();
+    moleBound.graphics.ss(1, 'round', 'round').s(("#000000")).dc(0,0,45);
+    moleBound.alpha = 0.5;
+    bounds = moleBound.getBounds();
+    moleBound.setBounds(0, 0, 100, 90);
+    stage.addChild(moleBound);
 
-      mole = new createjs.Container();
-      mole.addChild(moleRaw, moleBound);
-    stage.addChild(mole);
-
-    createjs.Ticker.on("tick", tick);
+    mole = new createjs.Container();
+    mole.addChild(moleRaw, moleBound);
+    holder.addChild(mole);
+    // createjs.Ticker.addEventListener("tick", checkOverLap);
+    createjs.Ticker.on("tick", hitMole);
+    createjs.Ticker.addEventListener("tick", moleIntersectTarget);
 }
 
 //generate dead moles to replace rolled over moles
@@ -151,43 +192,12 @@ function deadMole(){
     stage.addChild(dMole);
 }
 
-//create individual mole
-// function makeMole(){
-  // mole = new createjs.Shape();
-  // mole.graphics.ss(1, 'round', 'round').f("#" + rc() +rc() +rc()).dc(0,0,30).ef().es();
-  
-  
-  // punchMole(mole);
-  // holder.addChild(mole);
-
-  // createjs.Ticker.on("tick", tick);
-  // createjs.Ticker.timingMode = createjs.Ticker.RAF; 
-// }
-
-//generate dead moles to replace rolled over moles
-// function deadMole(){
-  // dMole = new createjs.Shape();
-  // dMole.graphics.beginFill("#000000").drawCircle(0,0,30);
-  // dMole = new createjs.Sprite(knockOutSprite, "spin");
-  // dMole.gotoAndPlay("spin");
-  //killed position
-//   dMole.x = kill[0];
-//   dMole.y = kill[1];
-//   stage.addChild(dMole);
-// }
-
 function removeDeadMole(dMole){
   stage.removeChild(dMole);
 }
 
-function removeOutBoundMole(mole){
-  if(mole.x < 10 || mole.x > canvas.width-5 || mole.y < 10 || mole.y > canvas.height-5){
-    holder.removeChild(mole);
-  }
-}
-
 //when mouse is in each mole's boundary, kill
-function tick(event){
+function hitMole(event){
   var l = holder.getNumChildren();
   for ( var m = 0; m < l; m++){
     var child = holder.getChildAt(m); //get child by index
@@ -196,7 +206,8 @@ function tick(event){
       //get last mouse coordinates before killing each mole
       kill[0] = stage.mouseX;
       kill[1] = stage.mouseY;
-
+      count++;
+      console.log(count);
       //kill and replace with dead mole
       holder.removeChildAt(m);
       deadMole();
@@ -277,26 +288,31 @@ function tick(event){
 function pathOne(){
   makeMole();
   createjs.Tween.get(mole)
-  .to({guide: {path: [-30,ry(), rx(),ry(), canvas.width+30,ry()]}}, speed);
+  .to({guide: {path: [-50,ry(), rx(),ry(), canvas.width+50,ry()]}}, speed);
+  stage.removeChild(mole);
 }
 //from right to left
 function pathTwo(){
   makeMole();
   createjs.Tween.get(mole)
-  .to({guide: {path: [canvas.width+30,ry(), canvas.width*0.5,canvas.height*0.5, -30,ry()]}}, speed);
+  .to({guide: {path: [canvas.width+50,ry(), canvas.width*0.5,canvas.height*0.5, -50,ry()]}}, speed);
+  stage.removeChild(mole);
 }
 //from top to bottom
 function pathThree(){
   makeMole();
   createjs.Tween.get(mole)
-  .to({guide: {path: [rx(),-30, canvas.width*0.5,canvas.height*0.5, rx(),canvas.height+30]}}, speed);
+  .to({guide: {path: [rx(),-50, canvas.width*0.5,canvas.height*0.5, rx(),canvas.height+50]}}, speed);
+  stage.removeChild(mole);
 }
 //from bottom to top
 function pathFour(){
   makeMole();
   createjs.Tween.get(mole)
-  .to({guide: {path: [rx(),canvas.height, canvas.width*0.5,canvas.height*0.5, rx(),-30]}}, speed);
+  .to({guide: {path: [rx(),canvas.height, canvas.width*0.5,canvas.height*0.5, rx(),-50]}}, speed);
+  stage.removeChild(mole);
 }
+
 //random x position
 function rx() {
   return Math.random() * 2580 + 10;
@@ -309,3 +325,44 @@ function ry() {
 function rc() {
   return Math.round(Math.random() * 0xED + 0x12).toString(16);
 }
+
+
+// function createMoleBound(mole){
+//   var g = new createjs.Graphics();
+//   g.setStrokeStyle(1);
+//   g.beginStroke("#000000");
+//   // var radius = getMoleRadius(mole);
+//   g.drawCircle(mole.x, mole.y, 50);
+//   console.log("circle");
+//   return new createjs.Shape(g);
+//   stage.addChild(g);
+// }
+// var ringX = ringY = (canvas.height*0.225)/2;
+// var ringRadius = canvas.height*0.225;
+// var moleBoundX = moleBoundY = 45;
+// var moleBoundRadius = 45; 
+
+//create individual mole
+// function makeMole(){
+  // mole = new createjs.Shape();
+  // mole.graphics.ss(1, 'round', 'round').f("#" + rc() +rc() +rc()).dc(0,0,30).ef().es();
+  
+  
+  // punchMole(mole);
+  // holder.addChild(mole);
+
+  // createjs.Ticker.on("tick", tick);
+  // createjs.Ticker.timingMode = createjs.Ticker.RAF; 
+// }
+
+//generate dead moles to replace rolled over moles
+// function deadMole(){
+  // dMole = new createjs.Shape();
+  // dMole.graphics.beginFill("#000000").drawCircle(0,0,30);
+  // dMole = new createjs.Sprite(knockOutSprite, "spin");
+  // dMole.gotoAndPlay("spin");
+  //killed position
+//   dMole.x = kill[0];
+//   dMole.y = kill[1];
+//   stage.addChild(dMole);
+// }
