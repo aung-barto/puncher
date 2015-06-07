@@ -16,8 +16,14 @@ app.get('/game', function(req, res){
   res.render('puncher.ejs');
 });
 
-app.get('/end', function(req, res){
+app.get('/gameover', function(req, res){
   res.render('end.ejs');
 });
 
-app.listen(3000, function() {console.log('listening to port 3000');});
+app.get('/timesup', function(req, res){
+  res.render('timesup.ejs');
+});
+
+app.listen(3000, function() {
+  console.log('start punching!');
+});

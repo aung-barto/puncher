@@ -8,14 +8,15 @@ var bounce = createjs.Ease.getPowOut(4);
 var punchSound = "punching";
 var count = 1;
 var clock;
-
+var moles = [];
 var glove = new createjs.Bitmap("./images/boxing_glove.png");
 var iceCream = new createjs.Bitmap("./images/ice_cream_s.png");
   
 //array of functions to push moles from random locations
 var path = [pathOne, pathTwo, pathThree, pathFour];
-
 var random = function(){return Math.floor(Math.random()*120)};
+collisionMethod = ndgmr.checkPixelCollision;
+// window.alphaThresh = 0;
 
 function init(){
   createjs.MotionGuidePlugin.install(createjs.Tween);
@@ -32,7 +33,6 @@ function init(){
   
   target();
 
-
   loadSound();
 
   stage.addChild(glove);
@@ -43,7 +43,7 @@ function init(){
   createjs.Ticker.setFPS(40);
   createjs.Ticker.addEventListener("tick", stage);
   createjs.Ticker.addEventListener("tick", moveGlove);
-  createjs.Ticker.addEventListener("tick", gameOver);
+  createjs.Ticker.addEventListener("tick", timesUp);
 }
 
 function loadSound() {
@@ -62,10 +62,10 @@ function timer(){
   }, 1000);
 }
 
-function gameOver(){
+function timesUp(){
   if ($(".timer").html() == "0"){
     clearInterval(shootMoles);
-    window.location.assign("http://localhost:3000/end");
+    window.location.assign("http://localhost:3000/timesup");
   }
 }
 
@@ -99,20 +99,29 @@ function target(){
   // ringRadius = canvas.height*0.225;
   // ringBound = ring.getBounds();
   // console.log(ringBound);
-  stage.addChild(iceCream);
+  holder.addChild(iceCream);
 }
 
-function moleIntersectTarget(){
-  var l = holder.getNumChildren();
-  for (var m = 0; m < l; m++){
-    var child = holder.getChildAt(m);
-  // console.log(ringRadius);
-    if(((child.x > canvas.width*0.5 - ringRadius && child.x < canvas.width*0.5)&&(child.y > canvas.height*0.5 - ringRadius && child.y < canvas.height*0.5))&&
-      ((child.x > canvas.width*0.5 && child.x < canvas.width*0.5 + ringRadius)&&(child.y > canvas.height*0.5 - ringRadius && child.y < canvas.height*0.5))&&
-      ((child.x > canvas.width*0.5 && child.x < canvas.width*0.5 + ringRadius)&&(child.y > canvas.height*0.5 && child.y < canvas.height*0.5 + ringRadius))&&
-      ((child.x > canvas.width*0.5 - ringRadius && child.x < canvas.width*0.5)&&(child.y > canvas.height*0.5 && child.y < canvas.height*0.5 + ringRadius))){
-      console.log("collision")
+function moleIntersectTarget(e){
+  // var l = holder.getNumChildren();
+  // for (var m = 0; m < l; m++){
+  //   var child = holder.getChildAt(m);
+  for (var i = 0; i< moles.length; i++){
+    var pig = moles[i];
+    var intersection = collisionMethod(iceCream, pig, 1);
+    if (intersection){
+      // console.log("collision");
+      window.location.assign("http://localhost:3000/gameover");
     }
+  }
+  stage.update();
+  // // console.log(ringRadius);
+  //   if(((child.x > canvas.width*0.5 - ringRadius && child.x < canvas.width*0.5)&&(child.y > canvas.height*0.5 - ringRadius && child.y < canvas.height*0.5))&&
+  //     ((child.x > canvas.width*0.5 && child.x < canvas.width*0.5 + ringRadius)&&(child.y > canvas.height*0.5 - ringRadius && child.y < canvas.height*0.5))&&
+  //     ((child.x > canvas.width*0.5 && child.x < canvas.width*0.5 + ringRadius)&&(child.y > canvas.height*0.5 && child.y < canvas.height*0.5 + ringRadius))&&
+  //     ((child.x > canvas.width*0.5 - ringRadius && child.x < canvas.width*0.5)&&(child.y > canvas.height*0.5 && child.y < canvas.height*0.5 + ringRadius))){
+  //     console.log("collision")
+  //   }
     // if(child.x == canvas.width*0.5 || child.y == canvas.height*0.5){
     //   console.log("collision");
     // }
@@ -129,7 +138,7 @@ function moleIntersectTarget(){
 
     // console.log("TOUCH!!!");
     // }
-  }
+  // }
 }
 
 function checkOverLap(){
@@ -171,21 +180,23 @@ function makeMole(){
         }
     });
     // mole.crossOrigin = "Anonymous";
-    moleRaw = new createjs.Sprite(moleSprite, "spin");
+    // moleRaw = new createjs.Sprite(moleSprite, "spin");
+    mole = new createjs.Sprite(moleSprite, "spin");
     //set boundary around mole for collision detection
-    moleBound = new createjs.Shape();
-    moleBound.graphics.ss(1, 'round', 'round').s(("#000000")).dc(0,0,45);
-    moleBound.alpha = 0.5;
-    bounds = moleBound.getBounds();
-    moleBound.setBounds(0, 0, 100, 90);
-    stage.addChild(moleBound);
+    // moleBound = new createjs.Shape();
+    // moleBound.graphics.ss(1, 'round', 'round').s(("#000000")).dc(0,0,35);
+    // moleBound.alpha = 0.5;
+    // bounds = moleBound.getBounds();
+    // moleBound.setBounds(0, 0, 70, 70);
+    // stage.addChild(moleBound);
 
-    mole = new createjs.Container();
-    mole.addChild(moleRaw, moleBound);
+    // mole = new createjs.Container();
+    // mole.addChild(moleRaw, moleBound);
+    moles.push(mole);
     holder.addChild(mole);
     // createjs.Ticker.addEventListener("tick", checkOverLap);
     createjs.Ticker.on("tick", hitMole);
-    createjs.Ticker.addEventListener("tick", moleIntersectTarget);
+    createjs.Ticker.addEventListener("tick", this.moleIntersectTarget.bind(this));
 }
 
 //generate dead moles to replace rolled over moles
