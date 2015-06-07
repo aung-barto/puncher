@@ -1,0 +1,42 @@
+<html>
+  <head>
+  <!-- Create JS -->
+    <script src="https://code.createjs.com/createjs-2015.05.21.min.js"></script>
+    <script src="https://code.createjs.com/soundjs-0.6.1.min.js"></script>
+  <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-2.1.1.js"></script>
+  <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="./css/styles.css" />
+  <!-- google font -->
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+
+    <script src="js/game.js"></script>
+<!--   <IfModule mod_setenvif.c>
+    <IfModule mod_headers.c>
+        <FilesMatch "\.(cur|gif|ico|jpe?g|png|svgz?|webp)$">
+            SetEnvIf Origin ":" IS_CORS
+            Header set Access-Control-Allow-Origin "*" env=IS_CORS
+        </FilesMatch>
+    </IfModule>
+</IfModule> -->
+  </head>
+  <!-- load init function -->
+  <body onload="init();">
+  <audio controls autoplay>
+    <source src="./sounds/boxing_bell_ring_x1.mp3" type="audio/mpeg">
+  </audio>
+  <div class="nav-bar">
+    <h1 class="title nav"><a href="/" class="title-link">Puncher!!!</a></h1>
+    <h4 class="timer nav">10</h4>
+    <img src="./images/dead_mole.png" class="dead-mole nav">
+    <h4 class="count nav"></h4>
+    <h4 onclick="clearInterval(gameTime)" class="end nav"><a href="/end" id="exit-link">exit</a></h4>
+  </div>
+    <!-- defines canvas size -->
+    <canvas id="gameCanvas"></canvas>
+    <!-- <button onload="playSound();" class="playSound">Bell</button> -->
+    <!-- grabbing mouse cursor -->
+    <div id="mycursor"></div>
+  </body>
+</html>
+
