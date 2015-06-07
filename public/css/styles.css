@@ -7,8 +7,13 @@ audio{
   display: none;
 }
 
+@font-face{
+  font-family: "Marke Eigenbau";
+  src: url(./fonts/mareib_reg/MARKEN__.TTF) format("truetype");
+}
+
 h1,h2,h4{
-  font-family: 'Montserrat', sans-serif; 
+  font-family: 'Marke Eigenbau'; 
   font-weight: 700;
   font-size: 40px;
   color: #ffffff;
@@ -67,16 +72,28 @@ a{
   display: inline-block;
   position: relative;
   bottom: 30px;
+  padding: 0 50px 0 50px;
 }
 
 h2.over {
-  font-family: 'Montserrat', sans-serif; 
   font-weight: 700;
   position: absolute;
   text-align: center;
   font-size: 150px;
   margin-left: 155px;
   color: #ff0000;
+}
+.timer, .count{
+  margin: 0px;
+  bottom: -5px;
+}
+
+.dead-mole{
+  bottom: -15px;
+  padding-right: 5px;
+}
+.count{
+  padding-left: 5px;
 }
 
 #mycursor {

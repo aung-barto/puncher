@@ -5,15 +5,14 @@ var speed = 11000;
 var dSpeed = 7000;
 var kill = [];
 var bounce = createjs.Ease.getPowOut(4);
-var bellSound = "bell";
-var count = "";
+var punchSound = "punch";
+var count = 1;
 //array of functions to push moles from random locations
 var path = [pathOne, pathTwo, pathThree, pathFour];
 
 var random = function(){return Math.floor(Math.random()*120)};
 
 function init(){
-
   createjs.MotionGuidePlugin.install(createjs.Tween);
   canvas = document.getElementById("gameCanvas");
   stage = new createjs.Stage(canvas);
@@ -27,27 +26,43 @@ function init(){
   updateCanvasSize();
   
   target();
+
   // replace cursor with glove
   glove = new createjs.Bitmap("./images/boxing_glove.png");
-  playSound();
-  // loadSound();
-  
-  stage.addChild(glove);
+  loadSound();
 
+  stage.addChild(glove);
+  // countDown()
   setInterval(shootMoles, 3000);
+  timer();
+  var i = setInterval(shootMoles, 3000);
+  setTimeout(function() {
+    clearInterval(i);
+  }, 60000);
+
   createjs.Ticker.setFPS(40);
   createjs.Ticker.addEventListener("tick", stage);
   createjs.Ticker.addEventListener("tick", moveGlove);
 }
 
+// function gameTime(){
+//   ;
+// }
+
 function loadSound () {
-  createjs.Sound.registerSound("./sounds/boxing_bell_ring_x1.mp3", bellSound);
-  
+  createjs.Sound.registerSound("./sounds/sharp_punch_sound.mp3", punchSound);
 }
 
 function playSound () {
-  createjs.Sound.play(bellSound);
+  createjs.Sound.play(punchSound);
 }
+
+function timer(){
+  setInterval(function(){
+    $(".timer").html() = -1;
+  }, 1000);
+}
+
 function moveGlove(event){
   glove.x = stage.mouseX - 30;
   glove.y = stage.mouseY - 33;
@@ -76,7 +91,7 @@ function target(){
   ringRadius = canvas.height*0.225;
   ringBound = ring.getBounds();
   console.log(ringBound);
-  holder.addChild(ring);
+  stage.addChild(ring);
 }
 
 function moleIntersectTarget(){
@@ -196,6 +211,12 @@ function removeDeadMole(dMole){
   stage.removeChild(dMole);
 }
 
+function counter(count){
+  $(".count").html(function(i,count){
+    return count * 1 + 1
+  });
+}
+
 //when mouse is in each mole's boundary, kill
 function hitMole(event){
   var l = holder.getNumChildren();
@@ -206,8 +227,12 @@ function hitMole(event){
       //get last mouse coordinates before killing each mole
       kill[0] = stage.mouseX;
       kill[1] = stage.mouseY;
+
+      playSound();
+
       count++;
-      console.log(count);
+      counter();
+    
       //kill and replace with dead mole
       holder.removeChildAt(m);
       deadMole();
