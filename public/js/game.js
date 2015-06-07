@@ -7,6 +7,7 @@ var kill = [];
 var bounce = createjs.Ease.getPowOut(4);
 var punchSound = "punch";
 var count = 1;
+var clock;
 //array of functions to push moles from random locations
 var path = [pathOne, pathTwo, pathThree, pathFour];
 
@@ -35,14 +36,12 @@ function init(){
   // countDown()
   setInterval(shootMoles, 3000);
   timer();
-  var i = setInterval(shootMoles, 3000);
-  setTimeout(function() {
-    clearInterval(i);
-  }, 60000);
+  // clearGame();
 
   createjs.Ticker.setFPS(40);
   createjs.Ticker.addEventListener("tick", stage);
   createjs.Ticker.addEventListener("tick", moveGlove);
+  createjs.Ticker.addEventListener("tick", clearGame);
 }
 
 // function gameTime(){
@@ -59,8 +58,17 @@ function playSound () {
 
 function timer(){
   setInterval(function(){
-    $(".timer").html() = -1;
+    $(".timer").html(function(i,clock){
+      return clock*1-1;
+    })
   }, 1000);
+}
+
+function clearGame(){
+  if ($(".timer").html() == "0"){
+    clearInterval(shootMoles);
+    window.location.assign("http://localhost:3000/end");
+  }
 }
 
 function moveGlove(event){
@@ -213,7 +221,7 @@ function removeDeadMole(dMole){
 
 function counter(count){
   $(".count").html(function(i,count){
-    return count * 1 + 1
+    return count * 1 + 1;
   });
 }
 
