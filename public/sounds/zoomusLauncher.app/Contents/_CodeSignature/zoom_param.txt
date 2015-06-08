@@ -1,0 +1,1 @@
+package.name=zoomusInstallerFull.pkg&package.version=latest&package.size=14231k&downloadRoot=https://hackhands.zoom.us/client&action=join&browser=chrome&confid=hvfR4ziuT5e2jZW%2BFypJYA%3D%3D&confno=404840821&zc=0&mcv=0.92.11227.0929&sta=false

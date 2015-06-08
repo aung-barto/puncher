@@ -1,6 +1,6 @@
 //setting up stage for game
 var stage, canvas, holder;
-var mole, dMole, moleBound, ring, ringRadius, moleRaw, bounds; 
+var mole, dMole, moleBound, ring, ringRadius, moleRaw, bounds, loop, clearTime, listener; 
 var speed = 11500;
 var dSpeed = 7000;
 var kill = [];
@@ -9,6 +9,7 @@ var punchSound = "punching";
 var crowdSound = "crowding";
 var count = 1;
 var clock;
+var second = 15;
 var moles = [];
 var glove = new createjs.Bitmap("./images/boxing_glove.png");
 var iceCream = new createjs.Bitmap("./images/ice_cream_s.png");
@@ -34,15 +35,17 @@ function init(){
 
   loadSound();
   setTimeout(crowd, 1000);
+  loop = setInterval(shootMoles, 4000);
   stage.addChild(glove);
+
  
-  setInterval(shootMoles, 4000);
   timer();
+
 
   createjs.Ticker.setFPS(40);
   createjs.Ticker.addEventListener("tick", stage);
   createjs.Ticker.addEventListener("tick", moveGlove);
-  createjs.Ticker.addEventListener("tick", timesUp);
+  listener = createjs.Ticker.on("tick", timesUp);
 }
 
 function loadSound() {
@@ -60,36 +63,83 @@ function crowd(){
 
 
 function timer(){
-  setInterval(function(){
-    $(".timer").html(function(i,clock){
-      return clock*1-1;
-    })
+  // debugger
+clearTime =setInterval(function(){
+    second--;
+    $(".timer").html(second);
   }, 1000);
-  createjs.Ticker.addEventListener("tick", timesUp);
-}
+ stage.update();
+};
+   // $(".timer").html()-1;
+    // $(".timer").html(function(c, clock){
+    //   return clock*1-1;
 
 function timesUp(){
   // if ($(".timer").html() == "0" && count > 10){
-
-  //   clearInterval(shootMoles);
-  //   clearInterval(timer);
-  //   setTimeout(restart,5000);
+  //   clearInterval(loop);
+  //   clearInterval(clearTime);
+  //   holder.removeAllChildren();
+  //   stage.removeAllChildren();
+  //   stage.clear();
+  //   $('.level2').html('LEVEL 2');
+  //   setTimeout(restart,3000);
   // }
   // else 
-    // debugger;
-    if($(".timer").html() == "0") {
-    clearInterval(shootMoles);
-    window.location.assign("http://localhost:3000/timesup");
+    if($(".timer").html() === "0") {
+    clearInterval(loop);
+    clearInterval(clearTime);
+    createjs.Ticker.off("tick", listener);
+    console.log(count)
+    postScore();
+    ;
+    // setTimeout(redirect, 2000);
   }
   stage.update();
 }
 
-function restart(){
-  speed = 10000;
-  setInterval(shootMoles(speed), 2500);
-  timer();
-  createjs.Ticker.addEventListener("tick", timesUp);
+// function redirect(){
+//   window.location.assign("http://localhost:3000/timesup");
+// }
+
+function postScore(){
+   var scoreData = JSON.stringify({score: count});
+    $.ajax({
+      method: 'POST',
+      url: '/timesup',
+      dataType: 'json',
+      data: scoreData,
+      contentType: "application/json"
+    }).done(function(data){
+        console.log("AAAAAIIIIIIII!!!!!");
+        console.log(data);
+
+        window.location.assign("http://localhost:3000/timesup/" + data.id)
+    });
 }
+// function restart(){
+//   speed = 10000;
+//   second = 15;
+//   timer();
+//   //create a container to store all moles
+//   holder = stage.addChild(new createjs.Container());
+
+//   stage.autoClear = true;
+
+//   window.addEventListener('resize', updateCanvasSize);
+//   updateCanvasSize();
+  
+//   target();
+
+//   loadSound();
+//   setTimeout(crowd, 1000);
+//   loop = setInterval(shootMoles, 3000);
+//   stage.addChild(glove);
+
+//   createjs.Ticker.addEventListener("tick", stage);
+//   createjs.Ticker.addEventListener("tick", moveGlove);
+//   createjs.Ticker.addEventListener("tick", timesUp);
+//   stage.update();
+// }
 
 function moveGlove(event){
   glove.x = stage.mouseX - 30;
@@ -105,8 +155,8 @@ function updateCanvasSize(){
 }
 //projecting moles from different paths
 function shootMoles(){
-  for ( i = 0; i < path.length; i++){
-   path[i]();
+  for (var shoot = 0; shoot < path.length; shoot++){
+   path[shoot]();
   }
 }
 
@@ -213,7 +263,7 @@ function makeMole(){
     holder.addChild(mole);
     // createjs.Ticker.addEventListener("tick", checkOverLap);
     createjs.Ticker.on("tick", hitMole);
-    createjs.Ticker.addEventListener("tick", moleIntersectTarget);
+    // createjs.Ticker.addEventListener("tick", moleIntersectTarget);
 }
 
 //generate dead moles to replace rolled over moles
