@@ -1,11 +1,12 @@
 //setting up stage for game
 var stage, canvas, holder;
 var mole, dMole, moleBound, ring, ringRadius, moleRaw, bounds; 
-var speed = 11000;
+var speed = 11500;
 var dSpeed = 7000;
 var kill = [];
 var bounce = createjs.Ease.getPowOut(4);
 var punchSound = "punching";
+var crowdSound = "crowding";
 var count = 1;
 var clock;
 var moles = [];
@@ -15,8 +16,6 @@ var iceCream = new createjs.Bitmap("./images/ice_cream_s.png");
 //array of functions to push moles from random locations
 var path = [pathOne, pathTwo, pathThree, pathFour];
 var random = function(){return Math.floor(Math.random()*120)};
-collisionMethod = ndgmr.checkPixelCollision;
-// window.alphaThresh = 0;
 
 function init(){
   createjs.MotionGuidePlugin.install(createjs.Tween);
@@ -34,10 +33,10 @@ function init(){
   target();
 
   loadSound();
-
+  setTimeout(crowd, 1000);
   stage.addChild(glove);
  
-  setInterval(shootMoles, 3000);
+  setInterval(shootMoles, 4000);
   timer();
 
   createjs.Ticker.setFPS(40);
@@ -48,11 +47,17 @@ function init(){
 
 function loadSound() {
   createjs.Sound.registerSound("./sounds/sharp_punch_sound.mp3", punchSound);
+  createjs.Sound.registerSound("./sounds/sports_crowd.mp3", crowdSound);
 }
 
 function punch() {
   createjs.Sound.play(punchSound);
 }
+
+function crowd(){
+  createjs.Sound.play(crowdSound);
+}
+
 
 function timer(){
   setInterval(function(){
@@ -60,13 +65,30 @@ function timer(){
       return clock*1-1;
     })
   }, 1000);
+  createjs.Ticker.addEventListener("tick", timesUp);
 }
 
 function timesUp(){
-  if ($(".timer").html() == "0"){
+  // if ($(".timer").html() == "0" && count > 10){
+
+  //   clearInterval(shootMoles);
+  //   clearInterval(timer);
+  //   setTimeout(restart,5000);
+  // }
+  // else 
+    // debugger;
+    if($(".timer").html() == "0") {
     clearInterval(shootMoles);
     window.location.assign("http://localhost:3000/timesup");
   }
+  stage.update();
+}
+
+function restart(){
+  speed = 10000;
+  setInterval(shootMoles(speed), 2500);
+  timer();
+  createjs.Ticker.addEventListener("tick", timesUp);
 }
 
 function moveGlove(event){
@@ -79,7 +101,7 @@ function updateCanvasSize(){
   var w = window.innerWidth;
   var h = window.innerHeight;
   canvas.width = w;
-  canvas.height = h-49;
+  canvas.height = h-100;
 }
 //projecting moles from different paths
 function shootMoles(){
@@ -92,34 +114,49 @@ function shootMoles(){
 function target(){
   // ring = new createjs.Shape();
   // ring.graphics.ss(7, 'round', 'round').s(('#ff0000')).dc(0,0,canvas.height*0.225);
-  iceCream.x = canvas.width * 0.5 - 50;
-  iceCream.y = canvas.height * 0.5 - 80;
-  iceCream.scaleX = 1.25;
-  iceCream.scaleY = 1.25;
+  iceCream.x = canvas.width * 0.5;
+  iceCream.y = canvas.height * 0.5;
+  iceCream.scaleX = 0.8;
+  iceCream.scaleY = 0.8;
   // ringRadius = canvas.height*0.225;
   // ringBound = ring.getBounds();
   // console.log(ringBound);
   holder.addChild(iceCream);
 }
 
-function moleIntersectTarget(e){
-  // var l = holder.getNumChildren();
-  // for (var m = 0; m < l; m++){
-  //   var child = holder.getChildAt(m);
-  for (var i = 0; i< moles.length; i++){
-    var pig = moles[i];
-    var intersection = collisionMethod(iceCream, pig, 1);
-    if (intersection){
-      // console.log("collision");
+function moleIntersectTarget(mole){
+  var l = holder.getNumChildren();
+  for (var m = 0; m < l; m++){
+    var pig = holder.getChildAt(m);
+  // console.log('intersect')
+
+  // for (var i = 0; i< moles.length; i++){
+    // var pig = moles[i];
+    console.log("pig coords= "+pig.x + ","+pig.y)
+    var dx = iceCream.x+40 - pig.x;
+    var dy = iceCream.y+64 - pig.y;
+    var distance = Math.sqrt(dx*dx+dy*dy);
+    // console.log(distance);
+    if (distance < 75) {
+
+    // if(pig.x == canvas.width*0.5 && pig.y == canvas.height*0.5){
+
+    // if(((pig.x > canvas.width*0.5 - 40 && pig.x < canvas.width*0.5)&&(pig.y > canvas.height*0.5 - 64 && pig.y < canvas.height*0.5))&&
+    // ((pig.x > canvas.width*0.5 && pig.x < canvas.width*0.5 + 40)&&(pig.y > canvas.height*0.5 - 64 && pig.y < canvas.height*0.5))&&
+    // ((pig.x > canvas.width*0.5 && pig.x < canvas.width*0.5 + 40)&&(pig.y > canvas.height*0.5 && pig.y < canvas.height*0.5 + 64))&&
+    // ((pig.x > canvas.width*0.5 - 40 && pig.x < canvas.width*0.5)&&(pig.y > canvas.height*0.5 && pig.y < canvas.height*0.5 + 64))){
+      // console.log('crashed');
       window.location.assign("http://localhost:3000/gameover");
     }
+    // var collision = ndgmr.checkPixelCollision(iceCream, pig);
+    // if (collision){
+    //   // console.log("collision");
+    //   window.location.assign("http://localhost:3000/gameover");
+    // }
   }
   stage.update();
   // // console.log(ringRadius);
-  //   if(((child.x > canvas.width*0.5 - ringRadius && child.x < canvas.width*0.5)&&(child.y > canvas.height*0.5 - ringRadius && child.y < canvas.height*0.5))&&
-  //     ((child.x > canvas.width*0.5 && child.x < canvas.width*0.5 + ringRadius)&&(child.y > canvas.height*0.5 - ringRadius && child.y < canvas.height*0.5))&&
-  //     ((child.x > canvas.width*0.5 && child.x < canvas.width*0.5 + ringRadius)&&(child.y > canvas.height*0.5 && child.y < canvas.height*0.5 + ringRadius))&&
-  //     ((child.x > canvas.width*0.5 - ringRadius && child.x < canvas.width*0.5)&&(child.y > canvas.height*0.5 && child.y < canvas.height*0.5 + ringRadius))){
+    
   //     console.log("collision")
   //   }
     // if(child.x == canvas.width*0.5 || child.y == canvas.height*0.5){
@@ -141,26 +178,6 @@ function moleIntersectTarget(e){
   // }
 }
 
-function checkOverLap(){
-  // var l = holder.getNumChildren();
-  // for ( var m = 0; m < l; m++){
-  //   var child = holder.getChildAt(m);
-  //   var pt = (child.globalToLocal(stage.mouseX, stage.mouseY));
-  //   if(ring.x - child.x < canvas.height*0.225 + 45){
-  //     alert("game over");
-  //     console.log("game over");
-     
-  //   }
-  // }
-  var l = holder.getNumChildren();
-  for (var m = 0; m < l; m++){
-    var child = holder.getChildAt(m);
-    if(moleIntersectTarget(canvas.width*0.5, canvas.height*0.5, canvas.height*0.225, child.x, child.y, 45)){
-      console.log("game over");
-    }
-    
-  }
-}
 //create individual mole
 function makeMole(){
     var moleSprite = new createjs.SpriteSheet({
@@ -192,11 +209,11 @@ function makeMole(){
 
     // mole = new createjs.Container();
     // mole.addChild(moleRaw, moleBound);
-    moles.push(mole);
+    // moles.push(mole);
     holder.addChild(mole);
     // createjs.Ticker.addEventListener("tick", checkOverLap);
     createjs.Ticker.on("tick", hitMole);
-    createjs.Ticker.addEventListener("tick", this.moleIntersectTarget.bind(this));
+    createjs.Ticker.addEventListener("tick", moleIntersectTarget);
 }
 
 //generate dead moles to replace rolled over moles
@@ -259,7 +276,7 @@ function hitMole(event){
         .to({x: -dMole.x-400, y: -dMole.y-400}, dSpeed, bounce);
         //when mole goes off screen
         if (dMole.x <= -30 || dMole.y <= -30){
-          removeDeadMole();
+          // removeDeadMole();
         }
       }
       //top right of target
@@ -267,7 +284,7 @@ function hitMole(event){
         createjs.Tween.get(dMole)
         .to({x: dMole.x+400, y: -dMole.y-400}, dSpeed, bounce);
         if (dMole.x >= canvas.width || dMole.y <= -30){
-          removeDeadMole();
+          // removeDeadMole();
         }
       }
       //bottom right of target
@@ -275,7 +292,7 @@ function hitMole(event){
         createjs.Tween.get(dMole)
         .to({x: dMole.x+400, y: dMole.y+400}, dSpeed, bounce);
         if (dMole.x >= canvas.width || dMole.y >= canvas.height){
-          removeDeadMole();
+          // removeDeadMole();
         }
       }
       //bottom left of target
@@ -283,7 +300,7 @@ function hitMole(event){
         createjs.Tween.get(dMole)
         .to({x: -dMole.x-400, y: dMole.y+400}, dSpeed, bounce);
         if (dMole.x <= -30 || dMole.y >= canvas.height){
-          removeDeadMole();
+          // removeDeadMole();
         }
       }
       //left x-axis of target
@@ -291,7 +308,7 @@ function hitMole(event){
         createjs.Tween.get(dMole)
         .to({x: -dMole.x-400}, dSpeed, bounce);
         if (dMole.x <= -30){
-          removeDeadMole();
+          // removeDeadMole();
         }
       }
       //top y-axis of target
@@ -299,7 +316,7 @@ function hitMole(event){
         createjs.Tween.get(dMole)
         .to({y: -dMole.y-400}, dSpeed, bounce);
         if (dMole.y <= -30){
-          removeDeadMole();
+          // removeDeadMole();
         }
       }
       //right x-axis of target
@@ -307,7 +324,7 @@ function hitMole(event){
         createjs.Tween.get(dMole)
         .to({x: dMole.x+400}, dSpeed, bounce);
         if (dMole.x >= canvas.width){
-          removeDeadMole();
+          // removeDeadMole();
         }
       }
       //bottom y-axis of target
@@ -315,7 +332,7 @@ function hitMole(event){
         createjs.Tween.get(dMole)
         .to({y: dMole.y+400}, dSpeed, bounce);
         if (dMole.y >= canvas.height){
-          removeDeadMole();
+          // removeDeadMole();
         }
       }
     }

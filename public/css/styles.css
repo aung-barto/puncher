@@ -1,5 +1,5 @@
 body {
-  /*background-color: #ffffff;*/
+  background-color: #ffb72e;
   margin: 0px;
 }
 
@@ -12,18 +12,17 @@ audio{
   src: url(./fonts/mareib_reg/MARKEN__.TTF) format("truetype");
 }
 
-h1,h2,h4{
+h1,h2,h3,h4,h6,p{
   font-family: 'Marke Eigenbau'; 
   font-weight: 700;
   font-size: 40px;
   color: #ffffff;
 }
 
-
 div.nav-bar{
-  background-color: #ff0000;
+  background-color: #7fefff;
   margin: 0px;
-  height: 100px;
+  height: 80px;
 }
 
 h2{
@@ -41,6 +40,7 @@ a{
   text-decoration: none;
 }
 
+/*Start page*/
 .start{
   position: absolute;
   text-align: center;
@@ -52,8 +52,16 @@ a{
   color: #ff0000;
 }
 
+marquee{
+  font-family: 'Marke Eigenbau';
+  font-size: 16px;
+  color: #fff400;
+  margin: 5px 0 0 0;
+}
+
+/*Nav bar and such*/
 .title{
-  top: 20px;
+  top: 12px;
   margin: 0 0 0 50px;
   float: left;
 }
@@ -61,35 +69,65 @@ a{
 .title-link,#exit-link{
   color: #ffffff;
 }
-.end{
+
+.nav{
+  display: inline-block;
+  position: relative;
+  bottom: 35px;
+  padding: 0 50px 0 50px;
+}
+
+.exit{
   float: right;
   text-align: right;
   margin-right: 50px;
   font-color: #ffffff;
 }
 
-.nav{
-  display: inline-block;
-  position: relative;
-  bottom: 30px;
-  padding: 0 50px 0 50px;
+/*closing words on TimesUp and GameOver pages*/
+.gameover{
+  background-image: url("../images/gamover_background.jpg");
+  background-repeat: no-repeat;
+  background-position: 0px 80px;
+  background-size: cover;
 }
 
-h2.over {
-  font-weight: 700;
-  position: absolute;
+.words{
+  margin-left: auto;
+  margin-right: auto;
   text-align: center;
-  font-size: 150px;
-  margin-left: 155px;
-  color: #ff0000;
 }
+
+.restart{
+  color: #ea0075;
+}
+
+h3.over {
+  font-weight: 7000;
+ /* position: absolute;*/
+ /* text-align: center;*/
+  font-size: 100px;
+  text-align: center;
+  margin: 70px 0 70px 0;
+  color: #ea0075;
+}
+
+h6{
+  margin: 0px;
+}
+
+p{
+  font-size: 20px;
+}
+
+/*Game page*/
 .timer, .count{
   margin: 0px;
-  bottom: -5px;
+  bottom: 3px;
 }
 
 .dead-mole{
-  bottom: -15px;
+  bottom: -9px;
   padding-right: 5px;
 }
 .count{
@@ -109,5 +147,5 @@ h2.over {
 #gameCanvas {
   position: relative;
   cursor: none;
-  bottom: 55px;
+  bottom: 81px;
 }
