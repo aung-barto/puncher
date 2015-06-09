@@ -12,7 +12,7 @@ audio{
   src: url(./fonts/mareib_reg/MARKEN__.TTF) format("truetype");
 }
 
-h1,h2,h3,h4,h6,p,li{
+h1,h2,h3,h4,h6,p,li,label{
   font-family: 'Marke Eigenbau'; 
   font-weight: 700;
   font-size: 40px;
@@ -89,6 +89,17 @@ marquee{
   font-color: #ffffff;
 }
 
+#players{
+  margin: 0 0 0 100px;
+}
+
+#score-board{
+  padding-left: 0px;
+}
+.name-score{
+  text-align: left;
+}
+
 /*closing words on TimesUp and GameOver pages*/
 .gameover{
   background-image: url("../images/gamover_background.jpg");
@@ -105,6 +116,10 @@ marquee{
 
 .restart{
   color: #ea0075;
+  bottom: -11px;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto; 
 }
 
 h3.over {
@@ -113,7 +128,7 @@ h3.over {
  /* text-align: center;*/
   font-size: 100px;
   text-align: center;
-  margin: 70px 0 70px 0;
+  margin: 50px 40px 0;
   color: #ea0075;
 }
 
@@ -123,6 +138,45 @@ h6{
 
 p{
   font-size: 20px;
+}
+
+.score{
+  display: inline-block;
+  padding: 0 5px 0 5px;
+}
+
+label{
+  font-size: 18px;
+}
+
+form{
+  margin-top: 20px;
+}
+
+input#name-input{
+  width: 42px;
+  height: 20px;
+  border: 0px;
+  margin: 0px;
+  padding: 0 3px 4px 7px;
+  font-family: 'Marke Eigenbau';
+  font-size: 18px;
+  background-color: transparent;
+}
+
+button{
+  font-family: Marke Eigenbau;
+  font-size: 18px;
+  color: #ea0075;
+  position: relative;
+  bottom: -1px;
+  height: 33px;
+  padding-bottom: 2px;
+  border: none;
+  padding-top: 4px;
+  padding-left: 8px;
+  background-color: #fff400;
+  margin-top: 20px;
 }
 
 /*Game page*/

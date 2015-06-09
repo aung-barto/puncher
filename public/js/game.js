@@ -35,6 +35,7 @@ function init(){
 
   loadSound();
   setTimeout(crowd, 1000);
+  shootMoles();
   loop = setInterval(shootMoles, 4000);
   stage.addChild(glove);
 

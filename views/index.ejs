@@ -23,11 +23,16 @@
   <div class="start">
     <h2><a href="/game" id="start-link" class="animated infinite pulse">START!</a></h2>
   </div>
-  <ul id="score-board">
-    <% users.forEach(function(obj){ %>
-      <li><%= obj.username %></li>
-      <li><%= obj.score %></li>
-    <% }) %>
-  </ul>
+  <div id="players">
+    <p>TOP PLAYERS</p>
+    <ul id="score-board">
+      <% users.forEach(function(obj){ %>
+        <div class="name-score">
+          <li><%= obj.username.toUpperCase() %></li>
+          <li><%= obj.score %></li>
+        </div>
+      <% }) %>
+    </ul>
+  </div>
   </body>
 </html>

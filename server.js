@@ -33,11 +33,12 @@ app.get('/game', function(req, res){
   res.render('puncher.ejs');
 });
 
-//fail
+//if moles hit ice cream = fail
 app.get('/gameover', function(req, res){
   res.render('gameover.ejs');
 });
 
+//get username, if empty, then delete the score
 app.put('/timesup/:id', function(req, res){
   if(req.body.username !== ''){
 

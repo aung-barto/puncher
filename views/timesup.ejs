@@ -10,16 +10,18 @@
   <body>
     <div class="nav-bar">
       <h1 class="title nav"><a href="/" class="title-link">Puncher!!!</a></h1>
+      <h6><a href="/" class="nav restart">RESTART</a></h6>
     </div>
     <div class="words">
       <h3 class="over animated bounceInDown">TIME'S UP</h3>
-      <h6><a href="/" class="restart">RESTART</a></h6>
-      <h6 class="word">Your Score: </h6>
-      <h6 class="score"><%= score.score %></h6>
+      <div>
+        <h6 class="score word">Your Score: </h6>
+        <h6 class="score"><%=  score.score %></h6>
+      </div>
 
       <form method="POST" action="/timesup/<%= score.id %>?_method=PUT">
-        <label>NAME</label>
-        <input type="text" name="username" placeholder="ABC">
+        <label id="name-label">NAME:</label>
+        <input id="name-input" type="text" maxlength="3" name="username" placeholder="ABC"></br>
         <button>SUBMIT</button>
       </form>
 
