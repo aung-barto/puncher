@@ -57,11 +57,25 @@ li{
   color: #ff0000;
 }
 
+#ice-cream{
+  position: absolute;
+  left: 720px;
+  width: 150px;
+}
+
 marquee{
   font-family: 'Marke Eigenbau';
   font-size: 16px;
   color: #fff400;
   margin: 5px 0 0 0;
+}
+
+#dead-mole{
+  position: absolute;
+  right: 50px;
+  bottom: 50px;
+  -webkit-animation-duration: 7s;
+  -webkit-animation-delay: 3s;
 }
 
 /*Nav bar and such*/
