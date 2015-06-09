@@ -20,7 +20,7 @@ var db = new sqlite3.Database("puncher.db");
 
 //index page
 app.get('/', function(req,res) {
-  db.all("SELECT * FROM users ORDER BY score DESC", function(err, data){
+  db.all("SELECT * FROM users ORDER BY score DESC LIMIT 4", function(err, data){
     if(err){
       console.log(err);
     } 
@@ -38,7 +38,7 @@ app.get('/gameover', function(req, res){
   res.render('gameover.ejs');
 });
 
-//get username, if empty, then delete the score
+//get username, if user doesn't enter name, then delete the score
 app.put('/timesup/:id', function(req, res){
   if(req.body.username !== ''){
 

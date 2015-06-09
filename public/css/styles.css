@@ -170,13 +170,15 @@ button{
   color: #ea0075;
   position: relative;
   bottom: -1px;
-  height: 33px;
-  padding-bottom: 2px;
+  height: 71px;
   border: none;
-  padding-top: 4px;
-  padding-left: 8px;
+  padding: 4px 15px 4px 20px;
   background-color: #fff400;
   margin-top: 20px;
+}
+
+#submit{
+  color:#ea0075;
 }
 
 /*Game page*/

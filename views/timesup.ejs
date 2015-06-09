@@ -10,7 +10,6 @@
   <body>
     <div class="nav-bar">
       <h1 class="title nav"><a href="/" class="title-link">Puncher!!!</a></h1>
-      <h6><a href="/" class="nav restart">RESTART</a></h6>
     </div>
     <div class="words">
       <h3 class="over animated bounceInDown">TIME'S UP</h3>
@@ -22,7 +21,7 @@
       <form method="POST" action="/timesup/<%= score.id %>?_method=PUT">
         <label id="name-label">NAME:</label>
         <input id="name-input" type="text" maxlength="3" name="username" placeholder="ABC"></br>
-        <button>SUBMIT</button>
+        <button ><h6 id="submit">SUBMIT / RESTART</h6></button>
       </form>
 
     </div>

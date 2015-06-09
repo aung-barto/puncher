@@ -102,16 +102,16 @@ function timesUp(){
 }
 
 function postScore(){
-   var scoreData = JSON.stringify({score: count});
-    $.ajax({
-      method: 'POST',
-      url: '/timesup',
-      dataType: 'json',
-      data: scoreData,
-      contentType: "application/json"
-    }).done(function(data){
-        window.location.assign(location.origin + "/timesup/" + data.id)
-    });
+  var scoreData = JSON.stringify({score: count});
+  $.ajax({
+    method: 'POST',
+    url: '/timesup',
+    dataType: 'json',
+    data: scoreData,
+    contentType: "application/json"
+  }).done(function(data){
+      window.location.assign(location.origin + "/timesup/" + data.id)
+  });
 }
 // function restart(){
 //   speed = 10000;
@@ -225,7 +225,6 @@ function deadMole(){
             "regY": 34.5, 
             "width": 70
         },
-
         "animations": {
           "spin": [0, 5, "spin", 0.2],
         }

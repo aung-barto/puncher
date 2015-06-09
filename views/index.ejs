@@ -9,10 +9,7 @@
     <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
   <!-- animate -->
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.3.0/animate.min.css">
-
-    <script>
-
-    </script>
+ 
   </head>
   <!-- load init function -->
   <body>
@@ -28,7 +25,7 @@
     <ul id="score-board">
       <% users.forEach(function(obj){ %>
         <div class="name-score">
-          <li><%= obj.username %></li>
+          <li><%= obj.username.toUpperCase() %></li>
           <li><%= obj.score %></li>
         </div>
       <% }) %>
