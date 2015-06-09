@@ -20,7 +20,7 @@ var db = new sqlite3.Database("puncher.db");
 
 //index page
 app.get('/', function(req,res) {
-  db.all("SELECT * FROM users", function(err, data){
+  db.all("SELECT * FROM users ORDER BY score DESC", function(err, data){
     if(err){
       console.log(err);
     } 
