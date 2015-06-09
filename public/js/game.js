@@ -8,7 +8,7 @@ var bounce = createjs.Ease.getPowOut(4);
 var punchSound = "punching";
 var crowdSound = "crowding";
 var count = 1;
-var second = 20;
+var second = 30;
 var glove = new createjs.Bitmap("./images/boxing_glove.png");
 var iceCream = new createjs.Bitmap("./images/ice_cream_s.png");
   
@@ -38,6 +38,7 @@ function init(){
   shootMoles();
   setInterval(shootChicken, 8000);
   loop = setInterval(shootMoles, 4000);
+  setInterval(shootMoles, 9000);
   stage.addChild(glove);
 
   timer();
