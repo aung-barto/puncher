@@ -9,7 +9,7 @@ var punchSound = "punching";
 var crowdSound = "crowding";
 var count = 1;
 var clock;
-var second = 15;
+var second = 8;
 var moles = [];
 var glove = new createjs.Bitmap("./images/boxing_glove.png");
 var iceCream = new createjs.Bitmap("./images/ice_cream_s.png");
@@ -110,9 +110,6 @@ function postScore(){
       data: scoreData,
       contentType: "application/json"
     }).done(function(data){
-        console.log("AAAAAIIIIIIII!!!!!");
-        console.log(data);
-
         window.location.assign("http://localhost:3000/timesup/" + data.id)
     });
 }

@@ -4,10 +4,16 @@ var request = require('request');
 var bodyParser = require('body-parser');
 var app = express();
 var cors = require('cors');
+var methodOverride = require('method-override');
 app.set('view engine', 'ejs');
 app.use(express.static(__dirname + '/public'));
-app.use(bodyParser.json({ extended: false}));
+// app.use(bodyParser.json({ extended: false}));
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+app.use(bodyParser.json());
 app.use(cors());
+app.use(methodOverride('_method'));
 
 var sqlite3 = require("sqlite3").verbose();
 var db = new sqlite3.Database("puncher.db");
@@ -30,6 +36,29 @@ app.get('/game', function(req, res){
 //fail
 app.get('/gameover', function(req, res){
   res.render('gameover.ejs');
+});
+
+app.put('/timesup/:id', function(req, res){
+  if(req.body.username !== ''){
+
+    db.run("UPDATE users SET username = ? WHERE id = " + parseInt(req.params.id), req.body.username, function(err){
+      if (err){
+        throw err;
+      }
+      console.log("give thee a name");
+      console.log(req.body);
+    res.redirect('/');
+    });
+  }
+  else {
+    db.run("DELETE FROM users WHERE id = " + parseInt(req.params.id), function(err){
+      if(err){
+        throw err;
+      }
+      console.log("no dice!");
+      res.redirect('/');
+    });
+  }
 });
 
 //times up, show score and get user name
@@ -59,17 +88,6 @@ app.get('/timesup/:id', function(req, res){
     res.render('timesup.ejs', {score: row});
   });
 });
-
-app.put('/timesup/:id', function(req, res){
-  if(req.params.username != 0){
-    db.run("UPDATE users SET username = ? WHERE id = " + parseInt(req.params.id), req.params.username, function(err, data){
-      if (err){
-        throw err;
-      }
-    res.redirect('/');
-    });
-  }
-})
 
 app.listen(3000, function() {
   console.log('start punching!');

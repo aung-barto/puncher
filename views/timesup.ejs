@@ -16,10 +16,13 @@
       <h6><a href="/" class="restart">RESTART</a></h6>
       <h6 class="word">Your Score: </h6>
       <h6 class="score"><%= score.score %></h6>
-      <form action="/">
-        <input type="text" name="username">ENTER YOUR NAME</input>
+
+      <form method="POST" action="/timesup/<%= score.id %>?_method=PUT">
+        <label>NAME</label>
+        <input type="text" name="username" placeholder="ABC">
         <button>SUBMIT</button>
       </form>
+
     </div>
   </body>
 </html>
