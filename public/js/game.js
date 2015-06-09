@@ -1,6 +1,6 @@
 //setting up stage for game
 var stage, canvas, holder, resetStage, listener, resetGlove;
-var mole, dMole, moleBound, chicken, loop, clearTime; 
+var mole, dMole, moleBound, chicken, loop, clearTime, chickHolder; 
 var speed = 11500;
 var dSpeed = 7000;
 var kill = [];
