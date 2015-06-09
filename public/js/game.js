@@ -39,6 +39,8 @@ function init(){
   setInterval(shootChicken, 8000);
   loop = setInterval(shootMoles, 4000);
   setInterval(shootMoles, 9000);
+  setInterval(shootMoles, 12500);
+
   stage.addChild(glove);
 
   timer();
