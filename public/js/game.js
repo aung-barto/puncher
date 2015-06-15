@@ -22,7 +22,7 @@ function init(){
   canvas = document.getElementById("gameCanvas");
   stage = new createjs.Stage(canvas);
 
-  //create a container to store all moles
+  //create a container to store all moles and chickens
   holder = stage.addChild(new createjs.Container());
   chickHolder = stage.addChild(new createjs.Container());
 
@@ -48,19 +48,19 @@ function init(){
   listener = createjs.Ticker.on("tick", timesUp);
 }
 
+//sound stuff
 function loadSound() {
   createjs.Sound.registerSound("./sounds/sharp_punch_sound.mp3", punchSound);
   createjs.Sound.registerSound("./sounds/sports_crowd.mp3", crowdSound);
 }
-
 function punch() {
   createjs.Sound.play(punchSound);
 }
-
 function crowd(){
   createjs.Sound.play(crowdSound);
 }
 
+//setting up timer
 function timer(){
 clearTime =setInterval(function(){
     second--;
@@ -68,7 +68,6 @@ clearTime =setInterval(function(){
   }, 1000);
  stage.update();
 };
-
 function timesUp(){
   if($(".timer").html() === "0") {
     clearInterval(loop);
@@ -79,6 +78,7 @@ function timesUp(){
   stage.update();
 }
 
+//posting score on the timesup page
 function postScore(){
   var scoreData = JSON.stringify({score: count});
   $.ajax({
@@ -92,32 +92,33 @@ function postScore(){
   });
 }
 
+//replacing mouse cursor with image
 function moveGlove(event){
   glove.x = stage.mouseX - 30;
   glove.y = stage.mouseY - 33;
   stage.update();
 }
-
+//auto update location of target by canvas size
 function updateCanvasSize(){
   var w = window.innerWidth;
   var h = window.innerHeight;
   canvas.width = w;
   canvas.height = h;
 }
-//projecting moles from different paths
+
+//projecting moles and chickens from different paths
 function shootMoles(){
   for (var shoot = 0; shoot < path.length; shoot++){
    path[shoot]();
   }
 }
-
 function shootChicken(){
   for (var shootC = 0; shootC < chickenPath.length; shootC++){
     chickenPath[shootC]();
   }
 }
 
-//target ring - doesn't move
+//target ice cream - doesn't move
 function target(){
   iceCream.x = canvas.width * 0.5-50;
   iceCream.y = canvas.height * 0.5-80;
@@ -127,6 +128,7 @@ function target(){
   stage.addChild(iceCream);
 }
 
+//detects when moles might hit ice cream
 function moleIntersectTarget(mole){
   var l = holder.getNumChildren();
   for (var m = 0; m < l; m++){
@@ -209,10 +211,12 @@ function makeChicken(){
   chickHolder.addChild(chicken);
 }
 
+//when glove hits mole, remove mole
 function removeDeadMole(dMole){
   stage.removeChild(dMole);
 }
 
+//counting number of moles getting hit
 function counter(count){
   $(".count").html(function(i,count){
     return count * 1 + 1;
