@@ -34,15 +34,12 @@ function init(){
   target();
   loadSound();
   setTimeout(crowd, 1000);
-
   shootMoles();
   setInterval(shootChicken, 8000);
   loop = setInterval(shootMoles, 4000);
   setInterval(shootMoles, 9000);
   setInterval(shootMoles, 12500);
-
   stage.addChild(glove);
-
   timer();
 
   createjs.Ticker.setFPS(40);
@@ -73,29 +70,7 @@ clearTime =setInterval(function(){
 };
 
 function timesUp(){
-  // if ($(".timer").html() !== "0" && count > 10){
-  //   // debugger;
-  //   clearInterval(loop);
-  //   clearInterval(clearTime);
-
-  //   // stage.removeAllChildren();
-
-  //   setTimeout(shootMoles, 500);
-  //   // setInterval(shootMoles, 2000);
-  //   // createjs.Ticker.off("tick", listener);
-  //   // createjs.Ticker.off("tick", resetGlove);
-  //   stage.autoClear = true;
-
-  //   // stage.clear();
-  //   // $('.level2').html('LEVEL 2');
-  //   // holder.removeAllChildren();
-  //   // speed = 10000;
-  //   // second = 15;
-  //   // init();
-  //   // stage.update();
-  // }
-  // else 
-    if($(".timer").html() === "0") {
+  if($(".timer").html() === "0") {
     clearInterval(loop);
     clearInterval(clearTime);
     createjs.Ticker.off("tick", listener);
@@ -116,27 +91,6 @@ function postScore(){
       window.location.assign(location.origin + "/timesup/" + data.id)
   });
 }
-// function restart(){
-//   speed = 10000;
-//   second = 15;
-//   timer();
-  //create a container to store all moles
-  // stage = new createjs.Stage(canvas);
-//   holder = stage.addChild(new createjs.Container());
-//   stage.autoClear = true;
-//   window.addEventListener('resize', updateCanvasSize);
-//   updateCanvasSize();
-//   target();
-//   loadSound();
-//   setTimeout(crowd, 1000);
-//   shootMoles();
-//   loop = setInterval(shootMoles, 3000);
-//   stage.addChild(glove);
-//   createjs.Ticker.addEventListener("tick", stage);
-//   createjs.Ticker.addEventListener("tick", moveGlove);
-//   createjs.Ticker.addEventListener("tick", timesUp);
-//   stage.update();
-// }
 
 function moveGlove(event){
   glove.x = stage.mouseX - 30;
@@ -177,13 +131,9 @@ function moleIntersectTarget(mole){
   var l = holder.getNumChildren();
   for (var m = 0; m < l; m++){
     var pig = holder.getChildAt(m);
-  // for (var i = 0; i< moles.length; i++){
-    // var pig = moles[i];
-    // console.log("pig coords= "+pig.x + ","+pig.y)
     var dx = iceCream.x+40 - pig.x;
     var dy = iceCream.y+64 - pig.y;
     var distance = Math.sqrt(dx*dx+dy*dy);
-    // console.log(distance);
     if (distance < 75) {
       window.location.assign(location.origin + "/gameover");
     }
