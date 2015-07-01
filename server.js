@@ -42,7 +42,7 @@ app.get('/gameover', function(req, res){
 app.put('/timesup/:id', function(req, res){
   if(req.body.username !== ''){
 
-    db.run("UPDATE users SET username = ? WHERE id = " + parseInt(req.params.id), req.body.username, function(err){
+    db.run("UPDATE users SET username = ? WHERE id = " + parseInt(req.params.id), req.body.username.toUpperCase(), function(err){
       if (err){
         throw err;
       }
@@ -78,7 +78,7 @@ app.post('/timesup', function(req, res){
   });
 });
 
-// //render times up page
+//render times up page
 app.get('/timesup/:id', function(req, res){
   db.get("SELECT * FROM users WHERE id = ?",req.params.id, function(err, row){
     console.log("get");
